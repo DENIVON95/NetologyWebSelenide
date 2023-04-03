@@ -7,6 +7,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.openqa.selenium.chrome.ChromeOptions;
 
 import static com.codeborne.selenide.Condition.*;
@@ -70,23 +72,30 @@ public class DebitCardTest {
                 .shouldHave(attribute("class", "checkbox checkbox_size_m checkbox_theme_alfa-on-white input_invalid"));
     }
 
-    @Test
-    public void shouldValidatePhone() {
+    @ParameterizedTest
+    @CsvSource(value = {"79777777777;Телефон указан неверно. Должно быть 11 цифр, например, +79012345678.",
+            " ;Поле обязательно для заполнения"}, delimiter = ';')
+    public void shouldValidatePhone(String phone, String validationMessage) {
         nameInput.shouldBe(visible).sendKeys("Тест Тестович");
-        phoneInput.sendKeys("79777777777");
+        phoneInput.setValue(phone);
+        agreementCheckbox.click();
         continueButton.click();
         phoneValidationInput
                 .shouldBe(visible)
-                .shouldHave(exactTextCaseSensitive("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678."));
+                .shouldHave(exactTextCaseSensitive(validationMessage));
     }
 
-    @Test
-    public void shouldValidateName() {
-        nameInput.shouldBe(visible).sendKeys("Test Testovich");
+    @ParameterizedTest
+    @CsvSource(value = {"Test Testovich;Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы.",
+            " ;Поле обязательно для заполнения"}, delimiter = ';')
+    public void shouldValidateName(String name, String validationMessage) {
+        nameInput.shouldBe(visible).setValue(name);
+        phoneInput.sendKeys("+79777777777");
+        agreementCheckbox.click();
         continueButton.click();
         nameValidationInput
                 .shouldBe(visible)
-                .shouldHave(exactTextCaseSensitive("Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы."));
+                .shouldHave(exactTextCaseSensitive(validationMessage));
     }
 
     @AfterEach
