@@ -19,9 +19,9 @@ import static com.codeborne.selenide.Selenide.$x;
 public class DebitCardTest {
 
     private SelenideElement nameInput = $("[data-test-id='name'] input");
-    private SelenideElement nameValidationInput = $("[data-test-id='name'] .input__inner .input__sub");
+    private SelenideElement nameValidationInput = $("[data-test-id='name'].input_invalid .input__sub");
     private SelenideElement phoneInput = $("[data-test-id='phone'] input");
-    private SelenideElement phoneValidationInput = $("[data-test-id='phone'] .input__inner .input__sub");
+    private SelenideElement phoneValidationInput = $("[data-test-id='phone'].input_invalid .input__sub");
     private SelenideElement agreementCheckbox = $("[data-test-id='agreement'] .checkbox__box");
     private SelenideElement continueButton = $x("//span[text()='Продолжить']");
     private SelenideElement successMessage = $("[data-test-id='order-success']");
